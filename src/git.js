@@ -232,18 +232,25 @@
     * Pull the updated contents of the current repo
     * @param {string} [remote]
     * @param {string} [branch]
+    * @param {Object} [options]
     * @param {Function} [then]
     */
-   Git.prototype.pull = function (remote, branch, then) {
-      var command = ["pull"];
-      if (typeof remote === 'string' && typeof branch === 'string') {
-         command.push(remote, branch);
+   Git.prototype.pull = function (remote, branch, options, then) {
+      var commands = ["pull"];
+
+      if (Array.isArray(options)) {
+         commands = commands.concat(options);
       }
+
+      if (typeof remote === 'string' && typeof branch === 'string') {
+         commands.push(remote, branch);
+      }
+
       if (typeof arguments[arguments.length - 1] === 'function') {
          then = arguments[arguments.length - 1];
       }
 
-      return this._run(command, function (err, data) {
+      return this._run(commands, function (err, data) {
          then && then(err, !err && this._parsePull(data));
       });
    };
@@ -615,6 +622,46 @@
 
       if (options[0] !== 'merge') {
          options.unshift('merge');
+      }
+
+      return this._run(options, function (err, data) {
+         then && then(err || null, err ? null : data);
+      });
+   };
+
+   /**
+    * Rebases from one branch onto the current branch, equivalent to running `git rebase ${from} $[to}`,
+    * the `options` argument can either be an array of additional parameters to pass to the command
+    * or null / omitted to be ignored.
+    *
+    * @param {string} upstream
+    * @param {string} branch
+    * @param {Object} [options]
+    * @param {Function} [then]
+    */
+   Git.prototype.rebaseFrom = function (upstream, branch, options, then) {
+      var commands = [
+         upstream,
+         branch
+      ];
+      var callback = Git.trailingFunctionArgument(arguments);
+
+      if (Array.isArray(options)) {
+         commands = options.concat(commands);
+      }
+
+      return this.rebase(commands, callback);
+   };
+
+   Git.prototype.rebase = function (options, then) {
+      if (!Array.isArray(options)) {
+         return this.then(function () {
+            then && then(new TypeError("Git.rebase requires an array of arguments"));
+         });
+      }
+
+      if (options[0] !== 'rebase') {
+         options.unshift('rebase');
       }
 
       return this._run(options, function (err, data) {

@@ -665,6 +665,21 @@ exports.merge = {
     }
 };
 
+exports.rebase = {
+    setUp: function (done) {
+        Instance();
+        done();
+    },
+    
+    rebase: function (test) {
+        git.rebase(['origin', 'develop'], function (err) {
+            test.same(['rebase', 'origin', 'develop'], theCommandRun());
+            test.done();
+        });
+        closeWith('');
+    },
+};
+
 exports.remotes = {
     setUp: function (done) {
         Instance();
