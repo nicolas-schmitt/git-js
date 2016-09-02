@@ -402,6 +402,17 @@
       });
    };
 
+  /**
+    * Delete a branch
+    *
+    *@param {Function} [then]
+    */
+   Git.prototype.deleteBranch = function (branchName, then) {
+      return this._run(['branch', branchName, '-d'], function (err) {
+         then && then(err);
+      });
+   };
+
    /**
     * Add config to local git instance
     *
