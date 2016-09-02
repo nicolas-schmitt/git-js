@@ -1,9 +1,16 @@
 {
-  "name": "simple-git",
+  "name": "@amundi/simple-git",
   "description": "Simple GIT interface for node.js",
-  "version": "1.43.0",
+  "publishConfig": {
+    "registry": "http://sinopia"
+  },
+  "version": "1.44.0",
   "author": "Steve King <steve@mydev.co>",
   "contributors": [
+    {
+      "name": "Nicolas Schmitt",
+      "email": "nicolas.schmitt@amundi.com"
+    },
     {
       "name": "Steve King",
       "email": "steve@mydev.co"
@@ -23,7 +30,7 @@
     "vcs"
   ],
   "license": "MIT",
-  "repository": "git://github.com/steveukx/git-js.git",
+  "repository": "git://github.com/nicolas-schmitt/git-js.git",
   "main": "src/index.js",
   "bin": {},
   "scripts": {
